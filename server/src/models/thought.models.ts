@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const thoughtSchema = new Schema({
   content: { type: String, required: true, maxlength: 280 },
-  timestamp: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now, expires: "1d" }
 });
 
 const ThoughtModel = mongoose.model("Thought", thoughtSchema);
