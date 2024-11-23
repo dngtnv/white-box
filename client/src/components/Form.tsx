@@ -39,6 +39,7 @@ const Form = () => {
           inputRef.current!.value = "";
         }
       } catch (error: unknown) {
+        toast.error("An error occurred. Please try again later.");
         const e = error as Error;
         console.error(e.message);
       }
