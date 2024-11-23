@@ -34,7 +34,7 @@ const Thoughts = () => {
   }
 
   if (!data) {
-    return <p>No thoughts found</p>;
+    return <p className="text-center">No thoughts found.</p>;
   }
 
   return (
@@ -47,7 +47,7 @@ const Thoughts = () => {
               <CardTitle>Anonymous</CardTitle>
             </CardHeader>
             <CardContent>
-              <p>{thought.content}</p>
+              <p className="break-words">{thought.content}</p>
             </CardContent>
           </Card>
         ))}
