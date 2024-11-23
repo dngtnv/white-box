@@ -28,9 +28,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <header className="sticky top-0 z-20">
+        <header>
           <div className="py-5">
-            <div className="w-screen px-4">
+            <div className="px-4">
               <div className="flex items-center font-bold">White Box</div>
             </div>
           </div>
