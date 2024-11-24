@@ -6,6 +6,28 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* width */
+textarea::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+textarea::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+textarea::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+  cursor: auto;
+}
+
+/* Handle on hover */
+textarea::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
