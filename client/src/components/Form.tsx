@@ -1,9 +1,9 @@
 "use client";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
-import { Textarea } from "./ui/textarea";
 import { useRef } from "react";
 import { mutate } from "swr";
+import Textarea from "./Textarea";
 
 const Form = () => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -46,12 +46,33 @@ const Form = () => {
     }
   };
   return (
-    <form onSubmit={handleSubmit}>
-      <Textarea ref={inputRef} placeholder="What is in your mind?" />
-      <Button type="submit" className="mt-5">
-        Send
-      </Button>
-    </form>
+    <>
+      <div className="rounded-md border border-input text-base shadow-sm">
+        <form onSubmit={handleSubmit}>
+          <div className="">
+            <div>
+              <Textarea
+                ref={inputRef}
+                name="thoughts"
+                autoFocus
+                placeholder="What is in your mind?"
+                className="max-h-[180px] min-h-11 w-full resize-none bg-transparent px-3 py-2 outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              />
+            </div>
+            <div className="flex items-center justify-between px-3 py-2">
+              <div>button</div>
+              <Button type="submit" variant="default">
+                Send
+              </Button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <p className="py-2 text-sm text-muted-foreground">
+        <span className="mr-1 text-red-500">*</span>Your thought will be deleted
+        after 24 hours.
+      </p>
+    </>
   );
 };
 
