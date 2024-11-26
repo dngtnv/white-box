@@ -1,4 +1,4 @@
-import Form from "@/components/Form";
+import ThoughtForm from "@/components/ThoughtForm";
 import Thoughts from "@/components/Thoughts";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -12,7 +12,7 @@ export default function Home() {
               Throw your thoughts into the void
             </h1>
             <div className="mt-12">
-              <Form />
+              <ThoughtForm />
             </div>
           </div>
         </section>

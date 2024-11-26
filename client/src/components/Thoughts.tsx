@@ -8,6 +8,9 @@ import SkeletonCard from "./SkeletonCard";
 interface Thoughts {
   _id: string;
   content: string;
+  styles: {
+    background: string;
+  };
 }
 
 const Thoughts = () => {
@@ -42,7 +45,12 @@ const Thoughts = () => {
       {data &&
         data.length !== 0 &&
         data.map((thought: Thoughts) => (
-          <Card key={thought._id}>
+          <Card
+            key={thought._id}
+            style={{
+              background: thought.styles.background,
+            }}
+          >
             <CardHeader>
               <CardTitle>Anonymous</CardTitle>
             </CardHeader>

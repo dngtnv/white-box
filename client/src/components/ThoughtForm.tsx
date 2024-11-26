@@ -1,12 +1,31 @@
 "use client";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
-import { useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import { mutate } from "swr";
 import Textarea from "./Textarea";
+import StyleOptions from "./StyleOptions";
 
-const Form = () => {
+const ThoughtForm = () => {
+  const [bgColor, setBgColor] = useState<string>("#ffffff");
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleBgColorChange = useCallback(
+    (color: string) => {
+      if (color !== bgColor) {
+        setBgColor(color);
+        setSelectedColor(color);
+      }
+    },
+    [bgColor],
+  );
+  const handleClearBgColor = useCallback(() => {
+    if (bgColor !== "#ffffff") {
+      setBgColor("#ffffff");
+      setSelectedColor(null);
+    }
+  }, [bgColor]);
 
   const validateContent = () => {
     const content = inputRef.current?.value;
@@ -29,7 +48,7 @@ const Form = () => {
         const res = await fetch("http://localhost:5000/api/thoughts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ content }),
+          body: JSON.stringify({ content, styles: { background: bgColor } }),
         });
         if (!res.ok) {
           const data = await res.json();
@@ -59,8 +78,12 @@ const Form = () => {
                 className="max-h-[180px] min-h-11 w-full resize-none bg-transparent px-3 py-2 outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
               />
             </div>
-            <div className="flex items-center justify-between px-3 py-2">
-              <div>button</div>
+            <div className="flex items-end justify-between px-3 py-2">
+              <StyleOptions
+                selectedColor={selectedColor}
+                onChangeBgColor={handleBgColorChange}
+                onClearBgColor={handleClearBgColor}
+              />
               <Button type="submit" variant="default">
                 Send
               </Button>
@@ -76,4 +99,4 @@ const Form = () => {
   );
 };
 
-export default Form;
+export default ThoughtForm;
