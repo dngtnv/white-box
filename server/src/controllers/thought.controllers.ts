@@ -3,8 +3,8 @@ import Thought from "../models/thought.models";
 
 export const postThoughts = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { content } = req.body;
-    const newThought = new Thought({ content });
+    const { content, styles } = req.body;
+    const newThought = new Thought({ content, styles });
     await newThought.save();
     res.status(201).json({ message: "Created thought" });
   } catch (err: any) {
