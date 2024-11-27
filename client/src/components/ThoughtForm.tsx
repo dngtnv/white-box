@@ -5,10 +5,12 @@ import { useCallback, useRef, useState } from "react";
 import { mutate } from "swr";
 import Textarea from "./Textarea";
 import StyleOptions from "./StyleOptions";
+import { LoaderCircle, Rocket } from "lucide-react";
 
 const ThoughtForm = () => {
   const [bgColor, setBgColor] = useState<string>("#ffffff");
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const handleBgColorChange = useCallback(
@@ -30,11 +32,9 @@ const ThoughtForm = () => {
   const validateContent = () => {
     const content = inputRef.current?.value;
     if (!content) {
-      toast.error("Content is required");
       return false;
     }
     if (content.length > 280) {
-      toast.error("Content must be less than 280 characters");
       return false;
     }
     return true;
@@ -43,25 +43,37 @@ const ThoughtForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const content = inputRef.current?.value;
-    if (validateContent()) {
-      try {
-        const res = await fetch("http://localhost:5000/api/thoughts", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ content, styles: { background: bgColor } }),
-        });
-        if (!res.ok) {
-          const data = await res.json();
-          toast.error(data.message);
-        } else {
-          mutate("http://localhost:5000/api/thoughts");
-          inputRef.current!.value = "";
-        }
-      } catch (error: unknown) {
-        toast.error("An error occurred. Please try again later.");
-        const e = error as Error;
-        console.error(e.message);
+
+    if (!content || !validateContent()) {
+      toast.error("Content must be between 1 and 280 characters");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const res = await fetch("http://localhost:5000/api/thoughts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content, styles: { background: bgColor } }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        toast.error(data.message || "Failed to submit thought.");
+        return;
       }
+
+      mutate("http://localhost:5000/api/thoughts");
+      // Clear form state
+      inputRef.current!.value = "";
+      handleClearBgColor();
+    } catch (error: unknown) {
+      const err = error as Error;
+      console.error("Error submitting thought:", err.message);
+      toast.error("An error occurred. Please try again later.");
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -84,8 +96,17 @@ const ThoughtForm = () => {
                 onChangeBgColor={handleBgColorChange}
                 onClearBgColor={handleClearBgColor}
               />
-              <Button type="submit" variant="default">
-                Send
+              <Button
+                type="submit"
+                variant="default"
+                className="flex h-9 w-9 items-center justify-center"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <LoaderCircle className="animate-spin" />
+                ) : (
+                  <Rocket />
+                )}
               </Button>
             </div>
           </div>
