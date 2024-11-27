@@ -36,7 +36,7 @@ const Thoughts = () => {
     );
   }
 
-  if (!data) {
+  if (!data || data!.length === 0) {
     return <p className="text-center">No thoughts found.</p>;
   }
 
