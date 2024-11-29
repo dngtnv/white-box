@@ -1,5 +1,5 @@
 "use client";
-import { fetcher } from "@/app/utils/fetcher";
+import { fetcher } from "@/lib/fetcher";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import useSWR from "swr";
 import { toast } from "sonner";
@@ -55,7 +55,10 @@ const Thoughts = () => {
               <CardTitle>Anonymous</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="break-words">{thought.content}</p>
+              <div
+                className="break-words"
+                dangerouslySetInnerHTML={{ __html: thought.content }}
+              />
             </CardContent>
           </Card>
         ))}

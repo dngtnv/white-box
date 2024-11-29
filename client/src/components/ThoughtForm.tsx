@@ -1,17 +1,51 @@
 "use client";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { mutate } from "swr";
-import Textarea from "./Textarea";
 import StyleOptions from "./StyleOptions";
 import { LoaderCircle, Rocket } from "lucide-react";
+import TextEditor from "./TextEditor";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
+import { Editor } from "@tiptap/react";
+
+const extractTextFromHTML = (html: string) => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+  return doc.body.textContent?.trim() || "";
+};
+
+const formSchema = z.object({
+  content: z.string().refine(
+    (value) => {
+      return extractTextFromHTML(value).trim().length >= 5;
+    },
+    {
+      message: "Content must be at least 5 characters long",
+    },
+  ),
+});
 
 const ThoughtForm = () => {
   const [bgColor, setBgColor] = useState<string>("#ffffff");
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [editorInstance, setEditorInstance] = useState<Editor | null>(null);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    mode: "onSubmit",
+    defaultValues: {
+      content: "",
+    },
+  });
+
+  if (form.formState.errors && form.formState.errors.content) {
+    toast.error(form.formState.errors.content?.message);
+  }
 
   const handleBgColorChange = useCallback(
     (color: string) => {
@@ -29,28 +63,9 @@ const ThoughtForm = () => {
     }
   }, [bgColor]);
 
-  const validateContent = () => {
-    const content = inputRef.current?.value;
-    if (!content) {
-      return false;
-    }
-    if (content.length > 280) {
-      return false;
-    }
-    return true;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const content = inputRef.current?.value;
-
-    if (!content || !validateContent()) {
-      toast.error("Content must be between 1 and 280 characters");
-      return;
-    }
-
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    const { content } = data;
     setIsLoading(true);
-
     try {
       const res = await fetch("http://localhost:5000/api/thoughts", {
         method: "POST",
@@ -66,8 +81,11 @@ const ThoughtForm = () => {
 
       mutate("http://localhost:5000/api/thoughts");
       // Clear form state
-      inputRef.current!.value = "";
       handleClearBgColor();
+      // Clear the editor content
+      if (editorInstance) {
+        editorInstance.commands.setContent("");
+      }
     } catch (error: unknown) {
       const err = error as Error;
       console.error("Error submitting thought:", err.message);
@@ -79,17 +97,24 @@ const ThoughtForm = () => {
   return (
     <>
       <div className="rounded-md border border-input text-base shadow-sm">
-        <form onSubmit={handleSubmit}>
-          <div className="">
-            <div>
-              <Textarea
-                ref={inputRef}
-                name="thoughts"
-                autoFocus
-                placeholder="What is in your mind?"
-                className="max-h-[180px] min-h-11 w-full resize-none bg-transparent px-3 py-2 outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-              />
-            </div>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+            <FormField
+              control={form.control}
+              name="content"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel hidden>Your thoughts</FormLabel>
+                  <FormControl>
+                    <TextEditor
+                      content={field.value}
+                      onChange={(value) => field.onChange(value)}
+                      onEditorReady={setEditorInstance}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
             <div className="flex items-end justify-between px-3 py-2">
               <StyleOptions
                 selectedColor={selectedColor}
@@ -109,8 +134,8 @@ const ThoughtForm = () => {
                 )}
               </Button>
             </div>
-          </div>
-        </form>
+          </form>
+        </Form>
       </div>
       <p className="py-2 text-sm text-muted-foreground">
         <span className="mr-1 text-red-500">*</span>Your thought will be deleted
