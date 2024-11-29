@@ -7,7 +7,7 @@ export default function Home() {
     <>
       <main className="p-4">
         <section className="flex items-center justify-center py-20">
-          <div className="max-w-[49rem]">
+          <div className="w-full max-w-[49rem]">
             <h1 className="text-pretty text-center text-3xl font-bold tracking-tight md:text-5xl">
               Throw your thoughts into the void
             </h1>
