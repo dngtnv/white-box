@@ -31,7 +31,11 @@ export default function RootLayout({
         <header>
           <div className="py-5">
             <div className="px-4">
-              <div className="flex items-center font-bold">White Box</div>
+              <div className="flex items-center font-bold">
+                <div className="rounded-xl border-2 border-black px-2 py-1">
+                  White Box
+                </div>
+              </div>
             </div>
           </div>
         </header>
