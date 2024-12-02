@@ -28,7 +28,7 @@ const Thoughts = () => {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
         {"abcdefghijklmno".split("").map((char) => (
           <SkeletonCard key={char} />
         ))}
@@ -41,7 +41,7 @@ const Thoughts = () => {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+    <div className="columns-xs">
       {data &&
         data.length !== 0 &&
         data.map((thought: Thoughts) => (
@@ -50,6 +50,7 @@ const Thoughts = () => {
             style={{
               background: thought.styles.background,
             }}
+            className="mb-4 break-inside-avoid"
           >
             <CardHeader>
               <CardTitle>Anonymous</CardTitle>
