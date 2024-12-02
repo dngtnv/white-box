@@ -5,15 +5,15 @@ import { memo } from "react";
 import { twMerge } from "tailwind-merge";
 
 const gradients = {
-  lightblue: "#00b8ff",
-  purple: "#be6ef6",
-  rose: "#f16175",
+  lightblue: "#d1e7ff",
+  purple: "#dfc1f3",
+  rose: "#ff8696",
   gradient1:
-    "linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%)",
+    "linear-gradient(68.1deg, rgb(255, 200, 69) -0.3%, rgb(239, 69, 115) 100.2%);",
   gradient2:
     "linear-gradient(90deg, rgba(33,150,243,1) 0%, rgba(0,230,118,1) 50%, rgba(255,235,59,1) 100%)",
   gradient3:
-    "linear-gradient(90deg, rgba(255,87,34,1) 0%, rgba(244,67,54,1) 50%, rgba(103,58,183,1) 100%)",
+    "radial-gradient(circle at 4.3% 10.7%, rgb(138, 118, 249) 13.6%, rgb(75, 252, 235) 100.7%)",
 };
 
 const StyleOptions = memo(function StyleOptions({
