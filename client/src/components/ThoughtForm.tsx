@@ -7,7 +7,7 @@ import StyleOptions from "./StyleOptions";
 import { LoaderCircle, Rocket } from "lucide-react";
 import TextEditor from "./TextEditor";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { FieldErrors, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { Editor } from "@tiptap/react";
@@ -43,9 +43,9 @@ const ThoughtForm = () => {
     },
   });
 
-  if (form.formState.errors && form.formState.errors.content) {
-    toast.error(form.formState.errors.content?.message);
-  }
+  const onError = (error: FieldErrors<{ content: string }>) => {
+    toast.error(error.content?.message);
+  };
 
   const handleBgColorChange = useCallback(
     (color: string) => {
@@ -98,7 +98,10 @@ const ThoughtForm = () => {
     <>
       <div className="rounded-md border border-input text-base shadow-sm">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+          <form
+            onSubmit={form.handleSubmit(onSubmit, onError)}
+            className="space-y-2"
+          >
             <FormField
               control={form.control}
               name="content"
