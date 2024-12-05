@@ -53,7 +53,7 @@ const Thoughts = () => {
             className="mb-4 break-inside-avoid"
           >
             <CardHeader>
-              <CardTitle>Anonymous</CardTitle>
+              <CardTitle className="text-sm text-gray-800">Anonymous</CardTitle>
             </CardHeader>
             <CardContent>
               <div
