@@ -142,7 +142,7 @@ const ThoughtForm = () => {
       </div>
       <p className="py-2 text-sm text-muted-foreground">
         <span className="mr-1 text-red-500">*</span>Your thought will be deleted
-        after 24 hours.
+        after 1 week.
       </p>
     </>
   );
